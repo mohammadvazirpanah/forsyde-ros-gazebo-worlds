@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!--
+  omni_robot_forsyde.xacro
+  Extends the omni_robot (rob_pkg) with:
+    - Virtual LiDAR sensor  → publishes /scan  (read by ForSyDe monitor.hpp)
+    - Planar move plugin     → accepts /cmd_vel, publishes /odom
+  These two additions let the existing ForSyDe dstarlite_3d code run on
+  the omni robot without any changes to the ForSyDe side.
+  Dependency: rob_pkg must be in the catkin workspace.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+
+  <!-- Include the original omni robot model -->
+  <xacro:include filename="$(find rob_pkg)/urdf/my_model.xacro"/>
+
+  <!-- ================================================================
+       Virtual LiDAR — mounted on top of the robot body
+       Publishes sensor_msgs/LaserScan on /scan (360 deg, range 0.12–3.5 m)
+       ================================================================ -->
+  <link name="lidar_link">
+    <visual>
+      <geometry><cylinder radius="0.03" length="0.04"/></geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry><cylinder radius="0.03" length="0.04"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0" ixz="0"
+               iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <!-- Place LiDAR above the robot body (camera_z = rob_scale = 0.225 m) -->
+    <origin xyz="0 0 0.27" rpy="0 0 0"/>
+  </joint>
+
+  <gazebo reference="lidar_link">
+    <sensor type="ray" name="lidar">
+      <pose>0 0 0 0 0 0</pose>
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159265</min_angle>
+            <max_angle>3.14159265</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.12</min>
+          <max>3.5</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_lidar" filename="libgazebo_ros_laser.so">
+        <topicName>/scan</topicName>
+        <frameName>lidar_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- ================================================================
+       Planar Move plugin — omni-directional motion for simulation
+       Accepts: /cmd_vel  (geometry_msgs/Twist)
+       Publishes: /odom   (nav_msgs/Odometry)
+       This is the correct plugin for omni/holonomic robots in Gazebo.
+       ================================================================ -->
+  <gazebo>
+    <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <odometryRate>20.0</odometryRate>
+      <robotBaseFrame>base_link</robotBaseFrame>
+    </plugin>
+  </gazebo>
+
+</robot>

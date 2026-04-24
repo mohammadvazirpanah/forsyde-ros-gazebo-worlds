@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  dstarlite_omni.launch
+  Launches the D*-Lite maze world in Gazebo with the omni robot.
+  The robot URDF is extended with a virtual LiDAR (/scan) and
+  planar move plugin (/cmd_vel + /odom) so the ForSyDe dstarlite_3d
+  simulation can control it without any code changes.
+
+  Usage:
+    roslaunch dstarlite_maze dstarlite_omni.launch
+-->
+<launch>
+
+  <!-- Load the extended robot URDF (omni + LiDAR + planar_move) -->
+  <param name="robot_description"
+         command="$(find xacro)/xacro --inorder
+                  $(find dstarlite_maze)/urdf/omni_robot_forsyde.xacro"/>
+
+  <!-- Gazebo with the D*-Lite maze world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find dstarlite_maze)/worlds/dstarlite_maze.world"/>
+    <arg name="debug"      value="false"/>
+    <arg name="gui"        value="true"/>
+    <arg name="paused"     value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="headless"   value="false"/>
+  </include>
+
+  <!-- Spawn the robot at grid cell (0,0) = world (0.5, 0.5) -->
+  <node name="omni_spawn" pkg="gazebo_ros" type="spawn_model"
+        output="screen"
+        args="-urdf -param robot_description -model omni_robot
+              -x 0.5 -y 0.5 -z 0.1 -Y 0.0"/>
+
+  <!-- Publish TF transforms -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher"
+        type="robot_state_publisher" respawn="false" output="screen"/>
+
+  <!-- Static transform: odom → base_link initial frame -->
+  <node pkg="tf2_ros" type="static_transform_publisher"
+        name="odom_base_broadcaster"
+        args="0 0 0 0 0 0 odom base_link"/>
+
+</launch>
