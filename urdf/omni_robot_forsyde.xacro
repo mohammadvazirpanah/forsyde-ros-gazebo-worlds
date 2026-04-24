@@ -10,8 +10,8 @@
 -->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
 
-  <!-- Include the original omni robot model -->
-  <xacro:include filename="$(find rob_pkg)/urdf/my_model.xacro"/>
+  <!-- Include the original omni robot model (bundled in this repo under rob_pkg/) -->
+  <xacro:include filename="$(find dstarlite_maze)/rob_pkg/omni_robot/urdf/my_model.xacro"/>
 
   <!-- ================================================================
        Virtual LiDAR — mounted on top of the robot body

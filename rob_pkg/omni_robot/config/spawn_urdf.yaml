@@ -1,0 +1,18 @@
+robot:
+
+    joint_state_controller:
+        type: joint_state_controller/JointStateController
+        publish_rate: 100
+
+    right_joint_velocity_controller:
+        type: velocity_controllers/JointVelocityController
+        joint: joint_right_wheel
+
+    left_joint_velocity_controller:
+        type: velocity_controllers/JointVelocityController
+        joint: joint_left_wheel
+
+    left2_joint_velocity_controller:
+        type: velocity_controllers/JointVelocityController
+        joint: joint_left2_wheel
+
