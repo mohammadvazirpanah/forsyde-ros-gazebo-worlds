@@ -70,9 +70,9 @@
     </sensor>
   </gazebo>
 
-  <!-- Fix robot body color (original xacro references link_chassis which doesn't exist) -->
+  <!-- Fix robot body color -->
   <gazebo reference="base_link">
-    <material>Gazebo/Orange</material>
+    <material>Gazebo/Grey</material>
   </gazebo>
 
   <!-- ================================================================
