@@ -156,7 +156,7 @@
     <!-- Default camera: top-down view centered on the 6x6 maze -->
     <gui fullscreen="0">
       <camera name="user_camera">
-        <pose>3 3 14 0 1.5708 0</pose>
+        <pose>3 3 14 0 1.5708 1.5708</pose>
         <view_controller>orbit</view_controller>
       </camera>
     </gui>
