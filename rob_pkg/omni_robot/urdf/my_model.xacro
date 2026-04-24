@@ -296,14 +296,14 @@
 	<visual>
 	<origin xyz="0 0 ${base_z}" rpy="0 0 3.14"/>
 	<geometry>
-        <mesh filename="package://rob_pkg/meshes/two_plate_s.dae" />
+        <mesh filename="package://rob_pkg/meshes/body.stl" />
       </geometry>
       <material name="red"/>
     </visual>
     <collision >
 	<origin xyz="0 0 ${base_z}" rpy="0 0 3.14"/>
       <geometry>
-        <mesh filename="package://rob_pkg/meshes/two_plate_s.dae"   />
+        <mesh filename="package://rob_pkg/meshes/body.stl" />
       </geometry>
     </collision>
 
