@@ -70,6 +70,11 @@
     </sensor>
   </gazebo>
 
+  <!-- Fix robot body color (original xacro references link_chassis which doesn't exist) -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+
   <!-- ================================================================
        Planar Move plugin — omni-directional motion for simulation
        Accepts: /cmd_vel  (geometry_msgs/Twist)

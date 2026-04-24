@@ -11,6 +11,10 @@
 -->
 <launch>
 
+  <!-- Load PID config to suppress gazebo_ros_control warnings -->
+  <rosparam file="$(find dstarlite_maze)/rob_pkg/omni_robot/config/gazebo_ros_control_params.yaml"
+            command="load" ns="/robot"/>
+
   <!-- Load the extended robot URDF (omni + LiDAR + planar_move) -->
   <param name="robot_description"
          command="$(find xacro)/xacro --inorder
